@@ -1,3 +1,4 @@
+import datetime
 import sys
 import sqlite3
 from tkinter import *
@@ -67,6 +68,14 @@ def iniciarSesion():
     Button(ventana1, text="Iniciar Sesion", cursor="hand2", command=verificarUsuario).pack()
 
 
+def ventanaCronometro():
+    ventanaCronometro = Toplevel(ventana1)
+    ventanaCronometro.geometry("370x640+600+100")
+    ventanaCronometro.resizable(width=False, height=False)
+    ventanaCronometro.title("Cronometro")
+    ventanaCronometro.iconbitmap("crono.ico")
+
+
 def registrar():
     global ventana2
     ventana2 = Toplevel(ventana)
@@ -123,6 +132,7 @@ def insertarUsuarios():
             messagebox.showinfo(message="Error al Registrar", title="Error")
         conexion.close()
 
+
 def verificarNombreUsuario():
     conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
     cursor = conexion.cursor()
@@ -143,8 +153,9 @@ def verificarUsuario():
         "SELECT contrasena FROM usuarios WHERE userName_usuario='" + nombreUsuarioVerificar.get() + "'and contrasena='" + constrasenaUsuarioVerificar.get() + "'")
 
     if cursor.fetchall():
-        messagebox.showinfo(title="Inicio Sesion", message="Usuario y Contraseña Correcta")
-        ventana1.destroy()
+        ventanaCronometro()
+        ventana.withdraw()
+        ventana1.withdraw()
     else:
         messagebox.showinfo(title="Inicio Sesion", message="Usuario y/o Contraseña Incorrecta ")
         ventana1.destroy()
