@@ -1,4 +1,3 @@
-import datetime
 import sys
 import sqlite3
 from tkinter import *
@@ -69,11 +68,7 @@ def iniciarSesion():
 
 
 def ventanaCronometro():
-    ventanaCronometro = Toplevel(ventana1)
-    ventanaCronometro.geometry("370x640+600+100")
-    ventanaCronometro.resizable(width=False, height=False)
-    ventanaCronometro.title("Cronometro")
-    ventanaCronometro.iconbitmap("crono.ico")
+    import Cronometro
 
 
 def registrar():
