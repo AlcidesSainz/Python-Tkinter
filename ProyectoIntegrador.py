@@ -7,7 +7,7 @@ from tkinter import messagebox
 def menuPrincipal():
     global ventana
     ventana = Tk()
-    ventana.geometry("370x640+600+100")
+    ventana.geometry("500x400+600+100")
     ventana.resizable(width=False, height=False)
     ventana.title("Menu Principal")
     ventana.iconbitmap("logo.ico")
@@ -17,17 +17,12 @@ def menuPrincipal():
 
     Label(text="Acceso al Sistema", bg="navy", fg="white", width="300", height="3", font=("Calibri", 15)).pack()
     Label(text="").pack()
-    Button(text="Iniciar Sesion", height="3", width="30", command=iniciarSesion, cursor="hand2").pack()
+    Button(text="Iniciar Sesion", height="3", width="30", command=iniciarSesion, cursor="hand2").place(x=20,y=250)
     Label(text="").pack()
-    Button(text="Registrarse", height="3", width="30", command=registrar, cursor="hand2").pack()
-    Label(text="").pack()
-    Button(text="Eliminar Mi Cuenta", height="3", width="30", cursor="hand2", command=eliminarCuentaVentana).pack()
-    Label(text="").pack()
-    Button(text="¿Olvidó su Contraseña?", height="3", width="30", cursor="hand2",
-           command=editarContrasenaVentana).pack()
+    Button(text="Registrarse", height="3", width="30", command=registrar, cursor="hand2").place(x=260,y=250)
     Label(text="").pack()
     Button(text="Salir", height="3", width="30", cursor="hand2",
-           command=sys.exit).pack()
+           command=sys.exit).place(x=130,y=320)
 
     ventana.mainloop()
 
@@ -35,7 +30,7 @@ def menuPrincipal():
 def iniciarSesion():
     global ventana1
     ventana1 = Toplevel(ventana)
-    ventana1.geometry("300x300+600+100")
+    ventana1.geometry("300x250+600+100")
     ventana1.resizable(width=False, height=False)
     ventana1.title("Inicio de sesion")
     ventana1.iconbitmap("logo.ico")
@@ -65,21 +60,15 @@ def iniciarSesion():
     Label(ventana1, text="").pack()
 
     Button(ventana1, text="Iniciar Sesion", cursor="hand2", command=verificarUsuario).pack()
-
-
-def ventanaCronometro():
-    import Cronometro
-
-
+    
 def registrar():
     global ventana2
     ventana2 = Toplevel(ventana)
-    ventana2.geometry("400x350+600+100")
+    ventana2.geometry("400x280+600+100")
     ventana2.title("Registrar")
     ventana2.iconbitmap("logo.ico")
 
     global nombreUsuarioEntrada
-    global emailUsuarioEntrada
     global contrasenaEntrada
 
     nombreUsuarioEntrada = StringVar()
@@ -95,11 +84,6 @@ def registrar():
     nombreUsuarioEntrada.pack()
     Label(ventana2).pack()
 
-    Label(ventana2, text="Email: ").pack()
-    emailUsuarioEntrada = Entry(ventana2)
-    emailUsuarioEntrada.pack()
-    Label(ventana2).pack()
-
     Label(ventana2, text="Contraseña: ").pack()
     contrasenaEntrada = Entry(ventana2)
     contrasenaEntrada.pack()
@@ -111,9 +95,9 @@ def registrar():
 def insertarUsuarios():
     conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
     cursor = conexion.cursor()
-    sqliteQuery = "INSERT INTO usuarios (userName_usuario,contrasena,email_usuario) VALUES ('{0}','{1}','{2}')".format(
-        nombreUsuarioEntrada.get(), contrasenaEntrada.get(), emailUsuarioEntrada.get())
-    if nombreUsuarioEntrada.get() == "" or contrasenaEntrada.get() == "" or emailUsuarioEntrada.get() == "":
+    sqliteQuery = "INSERT INTO usuarios (userName_usuario,contrasena) VALUES ('{0}','{1}')".format(
+        nombreUsuarioEntrada.get(), contrasenaEntrada.get())
+    if nombreUsuarioEntrada.get() == "" or contrasenaEntrada.get() == "":
         messagebox.showerror(message="No se puede dejar en blanco ningun campo", title="ERROR", )
         ventana2.destroy()
     else:
@@ -155,159 +139,6 @@ def verificarUsuario():
         messagebox.showinfo(title="Inicio Sesion", message="Usuario y/o Contraseña Incorrecta ")
         ventana1.destroy()
     conexion.close()
-
-
-def verificarEmailEliminar():
-    conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
-    cursor = conexion.cursor()
-
-    cursor.execute(
-        "SELECT contrasena FROM usuarios WHERE email_usuario='" + emailUsuarioVerificar.get() + "'and contrasena='" + constrasenaUsuarioVerificar.get() + "'")
-
-    if cursor.fetchall():
-        confirmarEliminar()
-
-    else:
-        messagebox.showinfo(title="ELIMINAR", message="Email y/o Contraseña Incorrecta ")
-        ventana5.destroy()
-    conexion.close()
-
-
-def eliminarCuentaVentana():
-    global ventana5
-    ventana5 = Toplevel(ventana)
-    ventana5.geometry("300x300+600+100")
-    ventana5.resizable(width=False, height=False)
-    ventana5.title("Eliminar")
-    ventana5.iconbitmap("logo.ico")
-
-    Label(ventana5, text="Ingrese su Email y Contraseña \n para Eliminar la Cuenta", bg="#E21111", fg="white",
-          width="300",
-          height="3",
-          font=("Calibri", 15)).pack()
-    Label(ventana5, text="").pack
-
-    global emailUsuarioVerificar
-    global constrasenaUsuarioVerificar
-
-    emailUsuarioVerificar = StringVar()
-    constrasenaUsuarioVerificar = StringVar()
-
-    global emailUsuarioEntrada
-    global constrasenaUsuarioEntrada
-
-    Label(ventana5, text="Email Usuario: ").pack()
-    emailUsuarioEntrada = Entry(ventana5, textvariable=emailUsuarioVerificar)
-    emailUsuarioEntrada.pack()
-    Label(ventana5).pack()
-
-    Label(ventana5, text="Contraseña: ").pack()
-    constrasenaUsuarioEntrada = Entry(ventana5, textvariable=constrasenaUsuarioVerificar, show="*")
-    constrasenaUsuarioEntrada.pack()
-    Label(ventana5).pack
-    Label(ventana5, text="").pack()
-
-    Button(ventana5, text="Eliminar", cursor="hand2", command=verificarEmailEliminar).pack()
-
-
-def confirmarEliminar():
-    conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
-    cursor = conexion.cursor()
-    pregunta = messagebox.askyesno(message="¿Seguro que desea eliminar?", title="Peligro")
-    if pregunta:
-        try:
-            cursor.execute("DELETE FROM usuarios WHERE email_usuario='" + emailUsuarioVerificar.get() + "'")
-            conexion.commit()
-            messagebox.showinfo(message="Eliminado con Exito", title="Eliminar")
-        except:
-            conexion.rollback()
-            messagebox.showinfo(message="Fallo al Eliminar", title="Error")
-    else:
-        messagebox.showinfo(message="Eliminacion Cancelada", title="Eliminar")
-        ventana5.destroy()
-
-
-def verificarEmail():
-    conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
-    cursor = conexion.cursor()
-
-    cursor.execute(
-        "SELECT email_usuario FROM usuarios WHERE email_usuario='" + emailUsuarioVerificar.get() + "'")
-
-    if cursor.fetchall():
-        editarContrasena()
-    else:
-        messagebox.showinfo(title="Actualizar", message="Email no Existe ")
-        ventana6.destroy()
-    conexion.close()
-
-
-def editarContrasenaVentana():
-    global ventana6
-    ventana6 = Toplevel(ventana)
-    ventana6.geometry("300x200+600+100")
-    ventana6.resizable(width=False, height=False)
-    ventana6.title("Cambiar Contraseña")
-    ventana6.iconbitmap("logo.ico")
-
-    Label(ventana6, text="Ingrese su Email \n Para cambiar la contraseña", bg="navy", fg="white",
-          width="300",
-          height="3",
-          font=("Calibri", 15)).pack()
-    Label(ventana6, text="").pack
-
-    global emailUsuarioVerificar
-
-    emailUsuarioVerificar = StringVar()
-
-    global emailUsuarioEntrada
-
-    Label(ventana6, text="Email Usuario: ").pack()
-    emailUsuarioEntrada = Entry(ventana6, textvariable=emailUsuarioVerificar)
-    emailUsuarioEntrada.pack()
-    Label(ventana6).pack()
-
-    Button(ventana6, text="Cambiar Contraseña", cursor="hand2", command=verificarEmail).pack()
-
-
-def editar():
-    conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
-    cursor = conexion.cursor()
-
-    querySqlite = "UPDATE usuarios SET contrasena='" + contrasenaNuevaEntrada.get() + "' WHERE email_usuario = '" + emailUsuarioEntrada.get() + "'"
-    try:
-        cursor.execute(querySqlite)
-        conexion.commit()
-        messagebox.showinfo(message="Cambio de Contraseña con Exito", title="Actualizacion")
-        ventana6.destroy()
-    except:
-        conexion.rollback()
-        messagebox.showinfo(message="Cambio de Contraseña Fallido", title="Actualizacion")
-        conexion.close()
-
-
-def editarContrasena():
-    global ventana7
-    ventana7 = Toplevel(ventana6)
-    ventana7.geometry("300x200+600+100")
-    ventana7.resizable(width=False, height=False)
-    ventana7.title("Cambiar Contraseña")
-    ventana7.iconbitmap("logo.ico")
-
-    Label(ventana7, text="Ingrese la nueva \nContraseña de su cuenta", bg="navy", fg="white",
-          width="300",
-          height="3",
-          font=("Calibri", 15)).pack()
-    Label(ventana7, text="").pack
-
-    global contrasenaNuevaEntrada
-    Label(ventana7, text="Nueva Constraseña: ").pack()
-    contrasenaNuevaEntrada = Entry(ventana7)
-    contrasenaNuevaEntrada.pack()
-    Label(ventana7).pack()
-
-    Button(ventana7, text="Cambiar Contraseña", cursor="hand2", command=editar).pack()
-
 
 if __name__ == "__main__":
     menuPrincipal()
