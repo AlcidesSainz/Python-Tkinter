@@ -1,5 +1,6 @@
 import sys
 import sqlite3
+from time import time
 from tkinter import *
 from tkinter import messagebox
 
@@ -8,7 +9,7 @@ def menuPrincipal():
     # Creando ventana del menu principa;
     global ventana
     ventana = Tk()
-    ventana.geometry("500x400+600+100")
+    ventana.geometry("700x500+500+100")
     ventana.resizable(width=False, height=False)
     ventana.title("Menu Principal")
     ventana.iconbitmap("logo.ico")
@@ -18,25 +19,33 @@ def menuPrincipal():
     Label(ventana, image=img).pack()
     # Creando texto de Acceso al Sistema
     Label(text="Acceso al Sistema", bg="#067b7a", fg="white",
-          width="300", height="3", font=("Calibri", 15)).pack()
+          width="300", height="3", font=("Georgia", 25)).pack()
     Label(text="").pack()
     # Boton Iniciar Sesion
     Button(text="Iniciar Sesion", height="3", width="30",
-           command=iniciarSesion, cursor="hand2").place(x=20, y=250)
+           command=iniciarSesion, cursor="hand2",font=("Georgia", 12)).place(x=20, y=300)
     Label(text="").pack()
     # Boton para registrarse
     Button(text="Registrarse", height="3", width="30",
-           command=registrar, cursor="hand2").place(x=260, y=250)
+           command=registrar, cursor="hand2",font=("Georgia", 12)).place(x=400, y=300)
     Label(text="").pack()
     # Boton para salir de la app
     Button(text="Salir", height="3", width="30", cursor="hand2",
-           command=sys.exit).place(x=130, y=320)
+           command=sys.exit,font=("Georgia", 12)).place(x=200, y=400)
 
     ventana.mainloop()
 
+def click(event):  
+    iniciar()
 
-def ventanaCronometroFuncion():
+
+def segundoClick(event):
+    detener()
+    guardar()
+
+def ventanaCronometroFuncion(segundo=0):
     global proceso
+    global ventanaCronometro
     proceso = 'after#0'
     ventanaCronometro = Toplevel(ventana1)
     ventanaCronometro.title("Cronometro")
@@ -57,6 +66,8 @@ def ventanaCronometroFuncion():
     # Boton Iniciar
     btn_inicio = Button(ventanaCronometro, font=(
         'courier', 10, 'bold'), text='Iniciar', command=iniciar)
+    if segundo==0:
+        ventanaCronometro.bind("<ButtonPress-1>",click)
     btn_inicio.place(x=20, y=120)
     # Boton Detener
     btn_detener = Button(ventanaCronometro, font=(
@@ -74,17 +85,17 @@ def ventanaCronometroFuncion():
         'courier', 10, 'bold'), text='Salir', command=salir)
     btn_Salir.place(x=146, y=160)
 
-
+ 
 def iniciarSesion():
     global ventana1
     ventana1 = Toplevel(ventana)
-    ventana1.geometry("300x250+600+100")
+    ventana1.geometry("400x300+600+100")
     ventana1.resizable(width=False, height=False)
     ventana1.title("Inicio de sesion")
     ventana1.iconbitmap("logo.ico")
 
     Label(ventana1, text="Ingrese su Usuario y Contraseña", bg="#067b7a", fg="white", width="300", height="3",
-          font=("Calibri", 15)).pack()
+          font=("Georgia", 15)).pack()
     Label(ventana1, text="").pack
 
     global nombreUsuarioVerificar
@@ -96,26 +107,26 @@ def iniciarSesion():
     global nombreUsuarioEntrada
     global constrasenaUsuarioEntrada
 
-    Label(ventana1, text="Usuario: ").pack()
+    Label(ventana1, text="Usuario: ",font=("Georgia")).pack()
     nombreUsuarioEntrada = Entry(ventana1, textvariable=nombreUsuarioVerificar)
     nombreUsuarioEntrada.pack()
     Label(ventana1).pack()
 
-    Label(ventana1, text="Contraseña: ").pack()
+    Label(ventana1, text="Contraseña: ",font=("Georgia")).pack()
     constrasenaUsuarioEntrada = Entry(
         ventana1, textvariable=constrasenaUsuarioVerificar, show="*")
     constrasenaUsuarioEntrada.pack()
     Label(ventana1).pack
     Label(ventana1, text="").pack()
 
-    Button(ventana1, text="Iniciar Sesion",
+    Button(ventana1, text="Iniciar Sesion",font=("Georgia"),
            cursor="hand2", command=verificarUsuario).pack()
 
 
 def registrar():
     global ventana2
     ventana2 = Toplevel(ventana)
-    ventana2.geometry("400x280+600+100")
+    ventana2.geometry("400x320+600+100")
     ventana2.title("Registrar")
     ventana2.iconbitmap("logo.ico")
 
@@ -125,22 +136,22 @@ def registrar():
     nombreUsuarioEntrada = StringVar()
     contrasenaEntrada = StringVar()
 
-    Label(ventana2, text="Por Favor Ingrese los datos que se solicitan \n"
+    Label(ventana2, text="Por favor ingrese los datos que se solicitan \n"
                          "Para Realizar el Registro", bg="#067b7a", fg="white", width="300", height="3",
-          font=("Calibri", 15)).pack()
+          font=("Georgia", 15)).pack()
     Label(ventana2, text="").pack()
 
-    Label(ventana2, text="Usuario: ").pack()
+    Label(ventana2, text="Usuario: ",font=("Georgia")).pack()
     nombreUsuarioEntrada = Entry(ventana2)
     nombreUsuarioEntrada.pack()
     Label(ventana2).pack()
 
-    Label(ventana2, text="Contraseña: ").pack()
+    Label(ventana2, text="Contraseña: ",font=("Georgia")).pack()
     contrasenaEntrada = Entry(ventana2)
     contrasenaEntrada.pack()
     Label(ventana2).pack()
 
-    Button(ventana2, text="Registrar", cursor="hand2",
+    Button(ventana2, text="Registrar",font=("Georgia"), cursor="hand2",
            command=verificarNombreUsuario).pack()
 
 
@@ -202,6 +213,10 @@ def iniciar(hora=0, minuto=0, segundo=0):
     global cronometro
     guardar_minuto = minuto
     guardar_segundo = segundo
+
+    if segundo!=0:
+        ventanaCronometro.bind("<ButtonPress-1>",segundoClick)
+        
     cronometro.after_cancel(proceso)
     if segundo > 59:
         segundo = 0
@@ -214,6 +229,7 @@ def iniciar(hora=0, minuto=0, segundo=0):
     cronometro.after_cancel(proceso)
     cronometro['text'] = str(hora)+':'+str(minuto)+':' + str(segundo)
     proceso = cronometro.after(1090, iniciar, (hora), (minuto), (segundo+1))
+
 
 
 def detener():
@@ -235,8 +251,7 @@ def guardar():
 
         cursor.execute(sqlQuery)
         conexion.commit()
-        messagebox.showinfo(
-            message="Tiempo Registrado con exito", title="Aviso")
+       
     except Exception as e:
         messagebox.showerror(
             message="Error al guardar el tiempo. {0}".format(e), title='Error')
@@ -255,7 +270,7 @@ def verTiempo():
         record=cursor.fetchone()
 
         messagebox.showinfo(
-            message="{0} minutos con {1} segundos".format(record[0], record[1]), title='Tiempo')
+            message="Tu record es: {0} minutos con {1} segundos".format(record[0], record[1]), title='Tiempo')
 
        
 
@@ -266,6 +281,7 @@ def verTiempo():
 
 def salir():
     quit()
+
 
 
 if __name__ == "__main__":
