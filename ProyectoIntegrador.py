@@ -32,17 +32,17 @@ def menuPrincipal():
     # Boton para salir de la app
     Button(text="Salir", height="3", width="30", cursor="hand2",
            command=sys.exit,font=("Georgia", 12)).place(x=200, y=400)
-
+    #mainloop para que la ventana no se cierre
     ventana.mainloop()
-
+#definiendo el evento del primer click para iniciar el contador
 def click(event):  
     iniciar()
 
-
+#definiendo el evento del segundo click para detener y guardar el tiempo
 def segundoClick(event):
     detener()
     guardar()
-
+#creando la ventana del cronometro
 def ventanaCronometroFuncion(segundo=0):
     global proceso
     global ventanaCronometro
@@ -66,6 +66,8 @@ def ventanaCronometroFuncion(segundo=0):
     # Boton Iniciar
     btn_inicio = Button(ventanaCronometro, font=(
         'courier', 10, 'bold'), text='Iniciar', command=iniciar)
+    #Iniciando el evento dentro del evento de presionar el primer click junto a un condicional que permite iniciar la funcion
+    #cuando los segundos son igual a 0
     if segundo==0:
         ventanaCronometro.bind("<ButtonPress-1>",click)
     btn_inicio.place(x=20, y=120)
@@ -85,7 +87,7 @@ def ventanaCronometroFuncion(segundo=0):
         'courier', 10, 'bold'), text='Salir', command=salir)
     btn_Salir.place(x=146, y=160)
 
- 
+#Creando la ventana donde el usuario va a iniciar su sesion
 def iniciarSesion():
     global ventana1
     ventana1 = Toplevel(ventana)
@@ -93,11 +95,12 @@ def iniciarSesion():
     ventana1.resizable(width=False, height=False)
     ventana1.title("Inicio de sesion")
     ventana1.iconbitmap("logo.ico")
-
+    #Creando caja de texto que aparecera en la ventana donde se va a iniciar sesion
     Label(ventana1, text="Ingrese su Usuario y Contraseña", bg="#067b7a", fg="white", width="300", height="3",
           font=("Georgia", 15)).pack()
     Label(ventana1, text="").pack
 
+    #Creando las variables encargadas de almacenar los datos ingresados en la base de datos
     global nombreUsuarioVerificar
     global constrasenaUsuarioVerificar
 
@@ -106,64 +109,71 @@ def iniciarSesion():
 
     global nombreUsuarioEntrada
     global constrasenaUsuarioEntrada
-
+    #Creando el Entry donde el usuario va a insertar sus datos en este caso es para el nombre del usuario
     Label(ventana1, text="Usuario: ",font=("Georgia")).pack()
     nombreUsuarioEntrada = Entry(ventana1, textvariable=nombreUsuarioVerificar)
     nombreUsuarioEntrada.pack()
     Label(ventana1).pack()
-
+    #Creando el Entry donde el usuario va a insertar sus datos en este caso es para la contrasenia
     Label(ventana1, text="Contraseña: ",font=("Georgia")).pack()
     constrasenaUsuarioEntrada = Entry(
         ventana1, textvariable=constrasenaUsuarioVerificar, show="*")
     constrasenaUsuarioEntrada.pack()
     Label(ventana1).pack
     Label(ventana1, text="").pack()
-
+    #Creando el boton para iniciar sesion que llama a la funcion encargada de verificar que el usuario 
+    #existe en la nase de datos
     Button(ventana1, text="Iniciar Sesion",font=("Georgia"),
            cursor="hand2", command=verificarUsuario).pack()
 
-
+#Creando la funcion para que el usuario se registre
 def registrar():
     global ventana2
     ventana2 = Toplevel(ventana)
     ventana2.geometry("400x320+600+100")
     ventana2.title("Registrar")
     ventana2.iconbitmap("logo.ico")
-
+    #Definiendo las variables encargadas de guardar los datos que el usuario va a ingresar
     global nombreUsuarioEntrada
     global contrasenaEntrada
 
     nombreUsuarioEntrada = StringVar()
     contrasenaEntrada = StringVar()
-
+    #Creando la caja de texto donde se le pedira al usuario los datos
     Label(ventana2, text="Por favor ingrese los datos que se solicitan \n"
                          "Para Realizar el Registro", bg="#067b7a", fg="white", width="300", height="3",
           font=("Georgia", 15)).pack()
     Label(ventana2, text="").pack()
-
+    #Creando la entrada para que el usuario ingrese su nombre de usuario
     Label(ventana2, text="Usuario: ",font=("Georgia")).pack()
     nombreUsuarioEntrada = Entry(ventana2)
     nombreUsuarioEntrada.pack()
     Label(ventana2).pack()
-
+    #Creando la entrada para que el usuario ingrese su contrasenia
     Label(ventana2, text="Contraseña: ",font=("Georgia")).pack()
     contrasenaEntrada = Entry(ventana2)
     contrasenaEntrada.pack()
     Label(ventana2).pack()
-
+    #Creando el boton que le indica al usuario que es para registrarse ademas de llamar la funcion 
+    #de verificar el nombre de usuario para saber si ese nombre de usuario se encuentra ya en la base de datos
     Button(ventana2, text="Registrar",font=("Georgia"), cursor="hand2",
            command=verificarNombreUsuario).pack()
-
-
+#Creando la funcion que va a acceder a la base de datos los datos ingresados por el usuario con la finalidad de registrar 
+#un usuario
 def insertarUsuarios():
+    #Codigo necesario para crear una conexion con la base de datos
     conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
     cursor = conexion.cursor()
+    #Creando la solicitud que va a permitir a Python ingresar a la base de datos la informacion ingresada por el usuario
     sqliteQuery = "INSERT INTO usuarios (userName_usuario,contrasena) VALUES ('{0}','{1}')".format(
         nombreUsuarioEntrada.get(), contrasenaEntrada.get())
+    #Condicional que va a verificar si existe algun espacio en blanco en la seccion de la contrasenia y el nombre de usuario
     if nombreUsuarioEntrada.get() == "" or contrasenaEntrada.get() == "":
         messagebox.showerror(
             message="No se puede dejar en blanco ningun campo", title="ERROR", )
         ventana2.destroy()
+    #Caso contrario se crea un try except que va a ingresar los datos en el sqlite3 y en caso de que no funcione 
+    #se lanzara un messagebox que informara acerca de un error
     else:
         try:
             cursor.execute(sqliteQuery)
@@ -175,7 +185,8 @@ def insertarUsuarios():
             messagebox.showinfo(message="Error al Registrar", title="Error")
         conexion.close()
 
-
+#Funcion que permite verificar si el nombre del usuario ya existe en la base de datos y en caso de que si exista
+#se mostrara un error que informara que ese usuario ya existe
 def verificarNombreUsuario():
     conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
     cursor = conexion.cursor()
@@ -185,10 +196,12 @@ def verificarNombreUsuario():
     if cursor.fetchall():
         messagebox.showerror(message="El usuario ya existe", title="ERROR")
         ventana2.destroy()
+    #Caso contrario se ejecutara la funcion que va a registrar el usuario en la base de datos
     else:
         insertarUsuarios()
 
-
+#Otra funcion para verificar el nombre del usuario que le permitira ingresar a la ventana del cronometro una vez
+#que el nombre de usuario y la contrasenia sean correctos
 def verificarUsuario():
     conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
     cursor = conexion.cursor()
@@ -205,7 +218,8 @@ def verificarUsuario():
         ventana1.destroy()
     conexion.close()
 
-
+#Funcion encargada de crear e iniciar el contador del cronometro, creado a partir de varios condicionales que permitira que los
+#minutos y segundos se reinicien cuando lleguen al numero especificado
 def iniciar(hora=0, minuto=0, segundo=0):
     global proceso
     global guardar_minuto
@@ -213,7 +227,8 @@ def iniciar(hora=0, minuto=0, segundo=0):
     global cronometro
     guardar_minuto = minuto
     guardar_segundo = segundo
-
+    #Condicional donde si los segundos son diferentes de 0 habilitara la funcion de que se pueda presionar el 
+    #segundo click que permitira detener y guardar el tiempo en la base de datos y el registro del usuario
     if segundo!=0:
         ventanaCronometro.bind("<ButtonPress-1>",segundoClick)
         
@@ -231,7 +246,7 @@ def iniciar(hora=0, minuto=0, segundo=0):
     proceso = cronometro.after(1090, iniciar, (hora), (minuto), (segundo+1))
 
 
-
+#Funcion para detener el cronometro
 def detener():
     try:
         cronometro.after_cancel(proceso)
@@ -239,7 +254,7 @@ def detener():
     except ValueError:
         pass
 
-
+#Funcion para guardar y actualizar los segundos y minutos del cronometro en la base de datos del usuario que ingreso
 def guardar():
     conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
     cursor = conexion.cursor()
@@ -256,7 +271,7 @@ def guardar():
         messagebox.showerror(
             message="Error al guardar el tiempo. {0}".format(e), title='Error')
 
-
+#Funcion que permite ver el tiempo que tiene el usuario guardado en su registro de la base de datos
 def verTiempo():
     conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
     cursor = conexion.cursor()
@@ -278,7 +293,7 @@ def verTiempo():
         messagebox.showerror(
             message="Error al guardar el tiempo. {0}".format(e), title='Error')
 
-
+#Funcion para salir de la aplicacion
 def salir():
     quit()
 
