@@ -15,7 +15,7 @@ def menuPrincipal():
     ventana.resizable(width=False, height=False)
     ventana.title("Menu Principal")
     ventana.iconbitmap("logo.ico")
-    
+
     # Agregando imagen del instituto
     img = PhotoImage(file="logoImagen.png")
     Label(ventana, image=img).pack()
@@ -58,22 +58,23 @@ def ventanaCronometroFuncion(segundo=0):
     ventanaCronometro = Toplevel(ventana1)
     ventanaCronometro.title("Cronometro")
     ventanaCronometro.iconbitmap('crono.ico')
-    ventanaCronometro.configure(background='black')
-    ventanaCronometro.attributes('-fullscreen',True)
+    ventanaCronometro.configure(background='#322E2E')
+    ventanaCronometro.attributes('-fullscreen', True)
     global cronometro
     global nombreUsuarioEntradaCronometro
     nombreUsuarioEntradaCronometro = nombreUsuarioEntrada
     # Creando Label Usuario
-    Label(ventanaCronometro, text="Usuario: ", bg="silver",font=25).place(x=20, y=0)
+    Label(ventanaCronometro, text="Usuario: ",
+          bg="silver", font=25).place(x=20, y=0)
     # Creando Label con el nombre de usuario
     Label(ventanaCronometro, text=nombreUsuarioEntradaCronometro.get(),
-          bg="silver",font=25).place(x=100, y=0)
+          bg="silver", font=25).place(x=100, y=0)
     cronometro = Label(ventanaCronometro, fg='green',
-                       width=0,height=0, font=('verdana', 150), bg='black')
+                       width=0, height=0, font=('verdana', 150), bg='black')
     cronometro.place(x=500, y=70)
     # Boton Iniciar
     btn_inicio = Button(ventanaCronometro, font=(
-        'Georgia', 20 ), text='Iniciar', command=iniciar)
+        'Georgia', 20), text='Iniciar', command=iniciar)
     # Iniciando el evento dentro del evento de presionar el primer click junto a un condicional que permite iniciar la funcion
     # cuando los segundos son igual a 0
     if segundo == 0:
@@ -247,8 +248,8 @@ def iniciar(hora=0, minuto=0, segundo=0):
     global cronometro
     guardar_minuto = minuto
     guardar_segundo = segundo
-    ceroMinuto=0
-    ceroSegundo=0
+    ceroMinuto = 0
+    ceroSegundo = 0
     # Condicional donde si los segundos son diferentes de 0 habilitara la funcion de que se pueda presionar el
     # segundo click que permitira detener y guardar el tiempo en la base de datos y el registro del usuario
     if segundo != 0:
@@ -263,8 +264,8 @@ def iniciar(hora=0, minuto=0, segundo=0):
             if hora > 23:
                 hora = 0
     cronometro.after_cancel(proceso)
-    cronometro['text'] =str(hora)+':'+str(minuto)+':' + str(segundo)
-    
+    cronometro['text'] = str(hora)+':'+str(minuto)+':' + str(segundo)
+
     proceso = cronometro.after(1090, iniciar, (hora), (minuto), (segundo+1))
 
 
