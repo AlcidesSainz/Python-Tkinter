@@ -1,9 +1,12 @@
+from cgitb import text
+from email import message
 from operator import truediv
 import sys
 import sqlite3
 from time import time
 from tkinter import *
 from tkinter import messagebox
+from tkinter import font
 from turtle import width
 
 
@@ -11,7 +14,7 @@ def menuPrincipal():
     # Creando ventana del menu principa;
     global ventana
     ventana = Tk()
-    ventana.geometry("700x500+500+100")
+    ventana.geometry("750x500+400+100")
     ventana.resizable(width=False, height=False)
     ventana.title("Menu Principal")
     ventana.iconbitmap("logo.ico")
@@ -21,19 +24,19 @@ def menuPrincipal():
     Label(ventana, image=img).pack()
     # Creando texto de Acceso al Sistema
     Label(text="Acceso al Sistema", bg="#067b7a", fg="white",
-          width="300", height="3", font=("Georgia", 25)).pack()
+          width="300", height="3", font=("Times New Roman", 25)).pack()
     Label(text="").pack()
     # Boton Iniciar Sesion
-    Button(text="Iniciar Sesion", height="3", width="30",
-           command=iniciarSesion, cursor="hand2", font=("Georgia", 12)).place(x=20, y=300)
+    Button(text="Iniciar Sesion", height="2", width="20",
+           command=iniciarSesion, cursor="hand2", font=("Georgia", 20)).place(x=20, y=300)
     Label(text="").pack()
     # Boton para registrarse
-    Button(text="Registrarse", height="3", width="30",
-           command=registrar, cursor="hand2", font=("Georgia", 12)).place(x=400, y=300)
+    Button(text="Registrarse", height="2", width="20",
+           command=registrar, cursor="hand2", font=("Georgia", 20)).place(x=400, y=300)
     Label(text="").pack()
     # Boton para salir de la app
-    Button(text="Salir", height="3", width="30", cursor="hand2",
-           command=sys.exit, font=("Georgia", 12)).place(x=200, y=400)
+    Button(text="Salir", height="2", width="20", cursor="hand2",
+           command=sys.exit, font=("Georgia", 20)).place(x=200, y=400)
     # mainloop para que la ventana no se cierre
     ventana.mainloop()
 # definiendo el evento del primer click para iniciar el contador
@@ -58,43 +61,43 @@ def ventanaCronometroFuncion(segundo=0):
     ventanaCronometro = Toplevel(ventana1)
     ventanaCronometro.title("Cronometro")
     ventanaCronometro.iconbitmap('crono.ico')
-    ventanaCronometro.configure(background='#322E2E')
+    ventanaCronometro.configure(background="#067b7a")
     ventanaCronometro.attributes('-fullscreen', True)
     global cronometro
     global nombreUsuarioEntradaCronometro
     nombreUsuarioEntradaCronometro = nombreUsuarioEntrada
     # Creando Label Usuario
     Label(ventanaCronometro, text="Usuario: ",
-          bg="silver", font=25).place(x=20, y=0)
+          bg="silver", font=("Elephant",20)).place(x=20, y=0)
     # Creando Label con el nombre de usuario
     Label(ventanaCronometro, text=nombreUsuarioEntradaCronometro.get(),
-          bg="silver", font=25).place(x=100, y=0)
+          bg="silver", font=("Elephant",20)).place(x=146, y=0)
     cronometro = Label(ventanaCronometro, fg='green',
                        width=0, height=0, font=('verdana', 150), bg='black')
-    cronometro.place(x=500, y=70)
+    cronometro.place(x=360, y=70)
     # Boton Iniciar
     btn_inicio = Button(ventanaCronometro, font=(
-        'Georgia', 20), text='Iniciar', command=iniciar)
+        'Elephant', 20), text='Iniciar', command=iniciar)
     # Iniciando el evento dentro del evento de presionar el primer click junto a un condicional que permite iniciar la funcion
     # cuando los segundos son igual a 0
     if segundo == 0:
         ventanaCronometro.bind("<ButtonPress-1>", click)
-    btn_inicio.place(x=530, y=400)
+    btn_inicio.place(x=440, y=400)
     # Boton Detener
     btn_detener = Button(ventanaCronometro, font=(
-        'Georgia', 20, ), text='Detener', command=detener)
-    btn_detener.place(x=730, y=400)
+        'Elephant', 20, ), text='Detener', command=detener)
+    btn_detener.place(x=620, y=400)
     # Boton Guardar
     btn_Guardar = Button(ventanaCronometro, font=(
-        'Georgia', 20), text='Guardar', command=guardar)
-    btn_Guardar.place(x=930, y=400)
+        'Elephant', 20), text='Guardar', command=guardar)
+    btn_Guardar.place(x=820, y=400)
     # Boton Ver Tiempo Guardado
-    Button(ventanaCronometro, font=('Georgia', 20),
-           text='Ver Resultado', command=verTiempo).place(x=600, y=500)
+    Button(ventanaCronometro, font=('Elephant', 20),
+           text='Ver Resultado', command=verTiempo).place(x=490, y=500)
     # Boton Salir
     btn_Salir = Button(ventanaCronometro, font=(
-        'Georgia', 20), text='Salir', command=salir)
-    btn_Salir.place(x=850, y=500)
+        'Elephant', 20), text='Salir', command=salir)
+    btn_Salir.place(x=770, y=500)
 
 # Creando la ventana donde el usuario va a iniciar su sesion
 
@@ -302,7 +305,8 @@ def guardar():
 def verTiempo():
     conexion = sqlite3.connect("Base de Datos/proyecto_db.db")
     cursor = conexion.cursor()
-
+    global record
+    global message
     try:
         sqlQuery = "SELECT minutos, segundos FROM usuarios WHERE userName_usuario= '{0}'".format(
             nombreUsuarioEntrada.get())
@@ -322,7 +326,7 @@ def verTiempo():
 
 
 def salir():
-    quit()
+   ventanaCronometro.destroy()
 
 
 if __name__ == "__main__":
